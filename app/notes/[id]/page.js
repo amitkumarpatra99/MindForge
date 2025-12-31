@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
-import { Trash2, Eye, Edit3, Star, Hash, X } from 'lucide-react';
+import { Trash2, Eye, Edit3, Star, Hash, X, Download } from 'lucide-react';
 import { useNotes } from '../../context/NotesContext';
 
 export default function NoteEditor() {
@@ -100,6 +100,21 @@ export default function NoteEditor() {
             {isPreview ? <Edit3 size={18} /> : <Eye size={18} />}
           </button>
           <button
+            onClick={() => {
+              const blob = new Blob([note.content], { type: 'text/markdown' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `${note.title || 'untitled'}.md`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+            title="Export to Markdown"
+          >
+            <Download size={18} />
+          </button>
+          <button
             onClick={handleDelete}
             className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
             title="Delete Note"
@@ -130,7 +145,7 @@ export default function NoteEditor() {
               </button>
             </span>
           ))}
-          <div className="flex items-center gap-1 text-slate-400 focus-within:text-blue-500">
+          <div className="flex items-center gap-1 text-slate-400 focus-within:text-accent-500">
             <Hash size={14} />
             <input
               type="text"
@@ -144,7 +159,7 @@ export default function NoteEditor() {
         </div>
 
         {isPreview ? (
-          <div className="prose prose-slate dark:prose-invert lg:prose-lg max-w-none">
+          <div className="prose prose-slate dark:prose-invert lg:prose-lg max-w-none flex-1">
             <ReactMarkdown>{note.content}</ReactMarkdown>
           </div>
         ) : (
@@ -156,6 +171,17 @@ export default function NoteEditor() {
           />
         )}
       </main>
+
+      {/* Footer Stats */}
+      <footer className="px-8 py-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 flex justify-between items-center bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm">
+        <div className="flex gap-4">
+          <span>{note.content.trim().split(/\s+/).filter(Boolean).length} words</span>
+          <span>{note.content.length} characters</span>
+        </div>
+        <div className="text-slate-300">
+          Last updated: {new Date(note.updatedAt).toLocaleTimeString()}
+        </div>
+      </footer>
     </div>
   );
 }
