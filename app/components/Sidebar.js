@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Search, BrainCircuit, Moon, Sun, Star, Menu, X } from 'lucide-react';
+import { Plus, Search, BrainCircuit, Moon, Sun, Star, Menu, X, Settings } from 'lucide-react';
 import NoteCard from './NoteCard';
+import SettingsModal from './SettingsModal';
 import { useNotes } from '../context/NotesContext';
 import { useTheme } from 'next-themes';
 
@@ -13,6 +14,9 @@ export default function Sidebar() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [sortBy, setSortBy] = useState('updated');
+    const [filterTag, setFilterTag] = useState(null);
 
     useEffect(() => {
         setMounted(true);
@@ -29,14 +33,22 @@ export default function Sidebar() {
         setIsMobileMenuOpen(false);
     };
 
-    const filteredNotes = notes.filter(note => {
-        const term = search.toLowerCase();
-        return (
-            (note.title || '').toLowerCase().includes(term) ||
-            (note.content || '').toLowerCase().includes(term) ||
-            (note.tags || []).some(tag => tag.toLowerCase().includes(term))
-        );
-    });
+    const filteredNotes = notes
+        .filter(note => {
+            const term = search.toLowerCase();
+            const matchesSearch = (
+                (note.title || '').toLowerCase().includes(term) ||
+                (note.content || '').toLowerCase().includes(term)
+            );
+            const matchesTag = filterTag ? (note.tags || []).includes(filterTag) : true;
+            return matchesSearch && matchesTag;
+        })
+        .sort((a, b) => {
+            if (sortBy === 'updated') return new Date(b.updatedAt) - new Date(a.updatedAt);
+            if (sortBy === 'created') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0); // Assuming createdAt might exist or fallback
+            if (sortBy === 'title') return (a.title || '').localeCompare(b.title || '');
+            return 0;
+        });
 
     const favorites = filteredNotes.filter(n => n.isFavorite);
     const others = filteredNotes.filter(n => !n.isFavorite);
@@ -96,6 +108,12 @@ export default function Sidebar() {
                                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                             </button>
                             <button
+                                onClick={() => setIsSettingsOpen(true)}
+                                className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                            >
+                                <Settings size={20} />
+                            </button>
+                            <button
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 className="md:hidden p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors"
                             >
@@ -113,17 +131,47 @@ export default function Sidebar() {
                     </button>
                 </div>
 
-                {/* Search */}
-                <div className="px-6 mb-4">
+                {/* Settings Modal */}
+                {isSettingsOpen && <SettingsModal onClose={() => setIsSettingsOpen(false)} />}
+
+                {/* Search & Sort */}
+                <div className="px-6 mb-4 space-y-3">
                     <div className="relative group">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
                         <input
                             type="text"
-                            placeholder="Search notes & tags..."
+                            placeholder="Search..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-slate-400 dark:text-slate-200"
+                            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none focus:border-accent-500 focus:ring-4 focus:ring-accent-500/10 transition-all placeholder:text-slate-400 dark:text-slate-200"
                         />
+                    </div>
+
+                    <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 outline-none focus:border-accent-500 text-slate-600 dark:text-slate-300"
+                        >
+                            <option value="updated">Latest</option>
+                            <option value="created">Created</option>
+                            <option value="title">A-Z</option>
+                        </select>
+
+                        {Array.from(new Set(notes.flatMap(n => n.tags || []))).map(tag => (
+                            <button
+                                key={tag}
+                                onClick={() => setFilterTag(filterTag === tag ? null : tag)}
+                                className={`
+                                    text-[10px] px-2 py-1 rounded-full whitespace-nowrap border transition-colors
+                                    ${filterTag === tag
+                                        ? 'bg-accent-100 dark:bg-accent-900/30 text-accent-700 dark:text-accent-400 border-accent-200 dark:border-accent-800'
+                                        : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-transparent hover:border-slate-200 dark:hover:border-slate-700'}
+                                `}
+                            >
+                                #{tag}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
