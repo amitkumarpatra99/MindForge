@@ -14,7 +14,7 @@ import Providers from "./components/Providers";
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} flex h-screen overflow-hidden bg-white`}>
+      <body className={`${inter.className} flex h-dvh overflow-hidden bg-white`}>
         <Providers>
           <Sidebar />
           <div className="flex-1 overflow-auto pt-16 md:pt-0">

@@ -76,7 +76,7 @@ export default function NoteEditor() {
   return (
     <div className="flex flex-col h-full bg-white dark:bg-slate-950 transition-colors">
       {/* Header */}
-      <header className="flex justify-between items-center px-8 py-6 border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm sticky top-0 z-10">
+      <header className="flex justify-between items-center px-4 md:px-8 py-4 md:py-6 border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="flex items-center gap-4">
           <span className={`text-xs font-medium px-2 py-1 rounded-full ${status === 'Saved' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400'}`}>
             {status}
@@ -125,13 +125,13 @@ export default function NoteEditor() {
       </header>
 
       {/* Editor Area */}
-      <main className="flex-1 max-w-4xl w-full mx-auto p-8 flex flex-col gap-6 overflow-y-auto">
+      <main className="flex-1 max-w-4xl w-full mx-auto p-4 md:p-8 flex flex-col gap-4 md:gap-6 overflow-y-auto">
         <input
           type="text"
           value={note.title}
           onChange={(e) => handleChange('title', e.target.value)}
           placeholder="Note Title"
-          className="text-4xl font-bold text-slate-800 dark:text-slate-100 placeholder-slate-300 dark:placeholder-slate-700 outline-none w-full bg-transparent"
+          className="text-2xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 placeholder-slate-300 dark:placeholder-slate-700 outline-none w-full bg-transparent"
         />
 
         {/* Tags Input */}
@@ -173,7 +173,7 @@ export default function NoteEditor() {
       </main>
 
       {/* Footer Stats */}
-      <footer className="px-8 py-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 flex justify-between items-center bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm">
+      <footer className="px-4 md:px-8 py-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 flex flex-col md:flex-row justify-between items-center gap-2 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm">
         <div className="flex gap-4">
           <span>{note.content.trim().split(/\s+/).filter(Boolean).length} words</span>
           <span>{note.content.length} characters</span>
