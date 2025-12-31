@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import { Trash2, Eye, Edit3, Star, Hash, X } from 'lucide-react';
@@ -8,55 +8,41 @@ import { useNotes } from '../../context/NotesContext';
 export default function NoteEditor() {
   const params = useParams();
   const router = useRouter();
-  const { fetchNotes } = useNotes();
+  const { notes, updateNote, deleteNote: contextDeleteNote } = useNotes();
 
-  const [note, setNote] = useState({ title: '', content: '', tags: [], isFavorite: false });
-  const [status, setStatus] = useState('Loading...');
+  const [note, setNote] = useState(null);
+  const [status, setStatus] = useState('Saved');
   const [isPreview, setIsPreview] = useState(false);
   const [tagInput, setTagInput] = useState('');
 
   const saveTimerRef = useRef(null);
 
-  // 1. Fetch data on load
+  // Load note from context
   useEffect(() => {
-    fetch(`/api/notes`, { cache: 'no-store' })
-      .then(res => res.json())
-      .then(data => {
-        const found = data.find(n => n.id === params.id);
-        if (found) {
-          // Ensure tags is an array (migration for old notes)
-          setNote({ ...found, tags: found.tags || [], isFavorite: found.isFavorite || false });
-          setStatus('Saved');
-        }
-      });
-  }, [params.id]);
-
-  // 2. Auto-save Logic
-  const saveNote = useCallback(async (updatedNote) => {
-    setStatus('Saving...');
-    try {
-      const res = await fetch(`/api/notes/${params.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(updatedNote),
-      });
-      if (!res.ok) {
-        throw new Error(`Failed to save: ${res.status}`);
+    if (notes.length > 0) {
+      const found = notes.find(n => n.id === params.id);
+      if (found) {
+        setNote(found);
+      } else {
+        // Note not found, redirect or handle
+        // router.push('/'); 
       }
-      setStatus('Saved');
-      fetchNotes();
-    } catch (error) {
-      console.error("Save error:", error);
-      setStatus('Error');
     }
-  }, [params.id, fetchNotes]);
+  }, [params.id, notes]);
 
   // Handle Input Changes
   const handleChange = (field, value) => {
+    if (!note) return;
+
     const updated = { ...note, [field]: value };
     setNote(updated);
+    setStatus('Saving...');
 
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => saveNote(updated), 500);
+    saveTimerRef.current = setTimeout(() => {
+      updateNote(note.id, { [field]: value });
+      setStatus('Saved');
+    }, 500);
   };
 
   const toggleFavorite = () => {
@@ -67,29 +53,32 @@ export default function NoteEditor() {
     if (e.key === 'Enter' && tagInput.trim()) {
       e.preventDefault();
       if (!note.tags.includes(tagInput.trim())) {
-        handleChange('tags', [...note.tags, tagInput.trim()]);
+        const newTags = [...note.tags, tagInput.trim()];
+        handleChange('tags', newTags);
       }
       setTagInput('');
     }
   };
 
   const removeTag = (tagToRemove) => {
-    handleChange('tags', note.tags.filter(tag => tag !== tagToRemove));
+    const newTags = note.tags.filter(tag => tag !== tagToRemove);
+    handleChange('tags', newTags);
   };
 
-  const deleteNote = async () => {
+  const handleDelete = async () => {
     if (!confirm("Delete this note?")) return;
-    await fetch(`/api/notes/${params.id}`, { method: 'DELETE' });
-    await fetchNotes();
+    contextDeleteNote(note.id);
     router.push('/');
   };
+
+  if (!note) return <div className="p-8 text-slate-400">Loading note...</div>;
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-slate-950 transition-colors">
       {/* Header */}
       <header className="flex justify-between items-center px-8 py-6 border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="flex items-center gap-4">
-          <span className={`text-xs font-medium px-2 py-1 rounded-full ${status === 'Saved' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : status === 'Error' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400'}`}>
+          <span className={`text-xs font-medium px-2 py-1 rounded-full ${status === 'Saved' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400'}`}>
             {status}
           </span>
         </div>
@@ -111,7 +100,7 @@ export default function NoteEditor() {
             {isPreview ? <Edit3 size={18} /> : <Eye size={18} />}
           </button>
           <button
-            onClick={deleteNote}
+            onClick={handleDelete}
             className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
             title="Delete Note"
           >
