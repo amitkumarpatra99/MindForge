@@ -22,7 +22,7 @@ export default function NoteCard({ note }) {
                     <div className={`
             p-2 rounded-lg transition-colors
             ${isActive
-                            ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                            ? 'bg-accent-50 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400'
                             : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 group-hover:bg-white dark:group-hover:bg-slate-700 group-hover:text-slate-600 dark:group-hover:text-slate-300'
                         }
           `}>

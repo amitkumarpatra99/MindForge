@@ -134,10 +134,9 @@ export default function Sidebar() {
                 {/* Settings Modal */}
                 {isSettingsOpen && <SettingsModal onClose={() => setIsSettingsOpen(false)} />}
 
-                {/* Search & Sort */}
                 <div className="px-6 mb-4 space-y-3">
                     <div className="relative group">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={18} />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-accent-500 transition-colors" size={18} />
                         <input
                             type="text"
                             placeholder="Search..."
