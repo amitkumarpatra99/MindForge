@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "./components/Sidebar";
+import ClientLayout from "./components/ClientLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -9,18 +9,13 @@ export const metadata = {
   description: "Your Second Brain",
 };
 
-import Providers from "./components/Providers";
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} flex h-dvh overflow-hidden bg-white`}>
-        <Providers>
-          <Sidebar />
-          <div className="flex-1 overflow-auto pt-16 md:pt-0">
-            {children}
-          </div>
-        </Providers>
+      <body className={`${inter.className} flex h-dvh overflow-hidden bg-white dark:bg-black text-slate-900 dark:text-slate-100`}>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );

@@ -1,39 +1,46 @@
 # 🧠 MindForge
 
-**MindForge** is a modern, local-first note-taking application designed to be your second brain. Built with performance and privacy in mind, it stores all your data directly in your browser, ensuring your thoughts remain yours.
+**MindForge** is a premium, local-first note-taking application designed for focus and clarity. Featuring a strictly monochrome aesthetic and a desktop-class 3-pane layout, it serves as your distraction-free second brain.
+
+![MindForge Premium Interface](/public/Project.png)
 
 ## ✨ Features
 
+### 💎 Premium Design
+- **Strict Monochrome Theme**: A professionally curated "Black & White" palette.
+- **True Dark Mode**: Deep black (`#000000`) background for a comfortable "Lights Out" experience.
+- **3-Pane Desktop Layout**: Efficiently manage your workflow with dedicated Navigation, Note List, and Editor panes.
+
 ### ✍️ Powerful Editing
 - **Rich Markdown Support**: Write naturally with comprehensive Markdown rendering.
-- **Distraction-Free Interface**: Clean, minimalist design focused on your content.
+- **Distraction-Free Interface**: Clean, minimalist design focused solely on your content.
 - **Live Statistics**: Real-time tracking of word and character counts.
 
-### 🎨 Personalization
-- **Dynamic Themes**: Choose from 5 beautiful accent colors (Blue, Purple, Green, Orange, Pink).
-- **Typography Control**: Switch between Sans-serif, Serif, and Monospace fonts to match your thinking style.
-- **Dark Mode**: Fully supported dark mode for late-night ideas.
+### 📱 Fully Responsive
+- **Mobile-First Experience**: Dedicated mobile layout with a bottom navigation bar.
+- **Adaptive Views**: Seamlessly transitions from list to editor.
+- **Touch Optimized**: Large tap targets and easy-to-reach controls.
 
 ### 🗂️ Organization
 - **Smart Tagging**: Organize notes with an easy-to-use tagging system.
-- **Advanced Search**: Instantly find notes by title, content, or tags.
+- **Advanced Search**: Instantly find notes by title or content.
 - **Sorting & Filtering**:
   - Sort by **Latest**, **Created Date**, or **A-Z**.
   - Filter by specific **Tags** with a single click.
 - **Favorites**: Pin your most important notes for quick access.
 
 ### 🚀 Productivity
-- **Local-First**: Instant loading and saving. No internet required.
+- **Local-First**: Instant loading and saving. Data is stored in your browser's `LocalStorage`.
+- **Privacy Focused**: Your notes never leave your device.
 - **Export**: Download your notes as `.md` files to own your data.
-- **Responsive**: Works seamlessly on desktop and mobile devices.
 
 ## 🛠️ Tech Stack
 
 - **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
+- **Theme**: `next-themes` (Class-based Dark Mode)
 - **State Management**: React Context + LocalStorage
-- **Markdown**: React Markdown
 
 ## 🚀 Getting Started
 
@@ -51,17 +58,7 @@ Then, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to start valid.
-
-## 📦 Deployment
-
-MindForge is optimized for deployment on [Vercel](https://vercel.com).
-
-1. Push your code to a GitHub repository.
-2. Import the project into Vercel.
-3. Click **Deploy**.
-
-**Note**: Since MindForge is a local-first app using `localStorage`, notes are stored on the specific device/browser where they are created and are not synced across devices via a backend.
+Open [http://localhost:3000](http://localhost:3000) with your browser to start building your second brain.
 
 ## 🤝 Contributing
 
