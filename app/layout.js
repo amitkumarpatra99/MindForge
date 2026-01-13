@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "MindForge",
-  description: "Your Second Brain",
+  description: "Your Second Brain - AI-Powered Knowledge Management",
 };
 
 export default function RootLayout({ children }) {
