@@ -1,5 +1,5 @@
 "use client";
-import { X, Check } from 'lucide-react';
+import { X, Check, Sun, Moon } from 'lucide-react';
 import { useSettings, FONT_FAMILIES } from '../context/SettingsContext';
 
 export default function SettingsModal({ onClose }) {
@@ -22,6 +22,37 @@ export default function SettingsModal({ onClose }) {
 
                 {/* Content */}
                 <div className="p-6 space-y-8">
+
+                    {/* Theme */}
+                    <div className="space-y-3">
+                        <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">App Theme</h3>
+                        <div className="grid grid-cols-2 gap-2">
+                            <button
+                                onClick={() => setTheme('light')}
+                                className={`
+                                    px-4 py-3 rounded-xl border text-center transition-all flex items-center justify-center gap-2
+                                    ${theme === 'light'
+                                        ? 'border-black dark:border-white bg-neutral-50 dark:bg-neutral-900 text-black dark:text-white'
+                                        : 'border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 text-neutral-700 dark:text-neutral-300'}
+                                `}
+                            >
+                                <Sun size={18} />
+                                <span className="text-sm font-medium">Light</span>
+                            </button>
+                            <button
+                                onClick={() => setTheme('dark')}
+                                className={`
+                                    px-4 py-3 rounded-xl border text-center transition-all flex items-center justify-center gap-2
+                                    ${theme === 'dark'
+                                        ? 'border-black dark:border-white bg-neutral-50 dark:bg-neutral-900 text-black dark:text-white'
+                                        : 'border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 text-neutral-700 dark:text-neutral-300'}
+                                `}
+                            >
+                                <Moon size={18} />
+                                <span className="text-sm font-medium">Dark</span>
+                            </button>
+                        </div>
+                    </div>
 
                     {/* Font Family */}
                     <div className="space-y-3">

@@ -37,7 +37,7 @@ export default function NoteList() {
     const others = filteredNotes.filter(n => !n.isFavorite);
 
     return (
-        <div className="h-full flex flex-col bg-white dark:bg-black w-full md:w-80 md:w-96">
+        <div className="h-full flex flex-col bg-white dark:bg-black w-full md:w-80">
             {/* Header / Search */}
             <div className="p-4 border-b border-neutral-100 dark:border-neutral-900 sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-md z-10">
                 <h2 className="text-xl font-bold mb-4 text-black dark:text-white">Notes</h2>
