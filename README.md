@@ -4,7 +4,7 @@
 
 ![MindForge Premium Interface](/public/Project.png)
 
-## ✨ Features
+## ✨ 
 
 ### 💎 Premium Design
 - **Strict Monochrome Theme**: A professionally curated "Black & White" palette.
